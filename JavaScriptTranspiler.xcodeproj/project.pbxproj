@@ -7,16 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0574A84E294B8F9A0095C04B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A84D294B8F9A0095C04B /* AppDelegate.swift */; };
-		0574A850294B8F9B0095C04B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0574A84F294B8F9B0095C04B /* Assets.xcassets */; };
-		0574A853294B8F9B0095C04B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0574A851294B8F9B0095C04B /* MainMenu.xib */; };
+		0574A84E294B8F9A0095C04B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A84D294B8F9A0095C04B /* App.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0574A84A294B8F9A0095C04B /* JavaScriptTranspiler.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JavaScriptTranspiler.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0574A84D294B8F9A0095C04B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0574A84F294B8F9B0095C04B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		0574A852294B8F9B0095C04B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		0574A84D294B8F9A0095C04B /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		0574A854294B8F9B0095C04B /* JavaScriptTranspiler.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JavaScriptTranspiler.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -50,9 +46,7 @@
 		0574A84C294B8F9A0095C04B /* JavaScriptTranspiler */ = {
 			isa = PBXGroup;
 			children = (
-				0574A84D294B8F9A0095C04B /* AppDelegate.swift */,
-				0574A84F294B8F9B0095C04B /* Assets.xcassets */,
-				0574A851294B8F9B0095C04B /* MainMenu.xib */,
+				0574A84D294B8F9A0095C04B /* App.swift */,
 				0574A854294B8F9B0095C04B /* JavaScriptTranspiler.entitlements */,
 			);
 			path = JavaScriptTranspiler;
@@ -116,8 +110,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0574A850294B8F9B0095C04B /* Assets.xcassets in Resources */,
-				0574A853294B8F9B0095C04B /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,22 +120,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0574A84E294B8F9A0095C04B /* AppDelegate.swift in Sources */,
+				0574A84E294B8F9A0095C04B /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		0574A851294B8F9B0095C04B /* MainMenu.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0574A852294B8F9B0095C04B /* Base */,
-			);
-			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		0574A855294B8F9B0095C04B /* Debug */ = {
@@ -271,9 +252,8 @@
 				DEVELOPMENT_TEAM = 85H2BRRAU7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMainNibFile = MainMenu;
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -298,9 +278,8 @@
 				DEVELOPMENT_TEAM = 85H2BRRAU7;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSMainNibFile = MainMenu;
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
