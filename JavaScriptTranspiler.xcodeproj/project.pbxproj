@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0574A84E294B8F9A0095C04B /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A84D294B8F9A0095C04B /* App.swift */; };
 		0574A892294B96110095C04B /* esprima.js in Resources */ = {isa = PBXBuildFile; fileRef = 0574A891294B96110095C04B /* esprima.js */; };
+		0574A895294E1C4B0095C04B /* RawDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A893294E1C4B0095C04B /* RawDecodable.swift */; };
+		0574A896294E1C4B0095C04B /* RawCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A894294E1C4B0095C04B /* RawCodingKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -16,6 +18,8 @@
 		0574A84D294B8F9A0095C04B /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		0574A854294B8F9B0095C04B /* JavaScriptTranspiler.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = JavaScriptTranspiler.entitlements; sourceTree = "<group>"; };
 		0574A891294B96110095C04B /* esprima.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = esprima.js; sourceTree = "<group>"; };
+		0574A893294E1C4B0095C04B /* RawDecodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawDecodable.swift; sourceTree = "<group>"; };
+		0574A894294E1C4B0095C04B /* RawCodingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawCodingKey.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -49,6 +53,8 @@
 			isa = PBXGroup;
 			children = (
 				0574A84D294B8F9A0095C04B /* App.swift */,
+				0574A894294E1C4B0095C04B /* RawCodingKey.swift */,
+				0574A893294E1C4B0095C04B /* RawDecodable.swift */,
 				0574A891294B96110095C04B /* esprima.js */,
 				0574A854294B8F9B0095C04B /* JavaScriptTranspiler.entitlements */,
 			);
@@ -124,6 +130,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0574A896294E1C4B0095C04B /* RawCodingKey.swift in Sources */,
+				0574A895294E1C4B0095C04B /* RawDecodable.swift in Sources */,
 				0574A84E294B8F9A0095C04B /* App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
