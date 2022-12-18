@@ -53,7 +53,7 @@ extension Identifier {
 extension Literal {
     var swiftCode: String {
         switch value {
-        case .string(value: let value): return "\"\(value)\""
+        case .string(value: let value): return "\"\(value.replacingOccurrences(of: "\"", with: "\\\""))\""
         case .nil: return "nil"
         default: return raw
         }
@@ -102,7 +102,7 @@ extension BlockStatement {
     var swiftCode: String { swiftCode(params: []) }
     
     func swiftCode(params: [FunctionParameter]) -> String {
-        "{" + (params.count > 0 ? params.map(\.swiftCode).joined(separator: ", ") + " in" : "") + "\n" + body.map(\.swiftCode).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "\n}"
+        "{" + params.swiftCode(separator: ", ", suffix: " in") + "\n" + body.map(\.swiftCode).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "\n}"
     }
 }
 
@@ -148,7 +148,7 @@ extension CallExpression {
 
 extension ObjectExpression {
     var swiftCode: String {
-        "[" + properties.map(\.swiftCode).joined(separator: "\n") + "]"
+        "[" + properties.map(\.swiftCode).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "]"
     }
 }
 
@@ -160,7 +160,7 @@ extension AssignmentExpression {
 
 extension Property {
     var swiftCode: String {
-        "\"" + key.swiftCode + "\"" + " : " + value!.swiftCode + ","
+        key.swiftCode + " : " + value!.swiftCode + ","
     }
 }
 
@@ -194,7 +194,7 @@ extension UpdateExpression {
         default: fatalError()
         }
         
-        return "JST.update(\(op), \(`prefix`), &\(argument.swiftCode))"
+        return "JST.update(\(op), \(`prefix`), 1, &\(argument.swiftCode))"
     }
 }
 
@@ -238,3 +238,101 @@ extension ArrowFunctionExpression {
     }
 }
 
+extension EmptyStatement {
+    var swiftCode: String { "" }
+}
+
+extension ThisExpression {
+    var swiftCode: String { "self" }
+}
+
+extension WhileStatement {
+    var swiftCode: String {
+        "while \(test.swiftCode) \(body.swiftCode)"
+    }
+}
+
+extension BreakStatement {
+    var swiftCode: String { "break" }
+}
+
+extension ContinueStatement {
+    var swiftCode: String { "continue" }
+}
+
+extension TryStatement {
+    var swiftCode: String {
+        "do \(block.swiftCode)\(handler.swiftCode())\(finalizer.swiftCode())"
+    }
+}
+
+extension CatchClause {
+    var swiftCode: String {
+        " catch let \(param.swiftCode) \(body.swiftCode)"
+    }
+}
+
+extension NewExpression {
+    var swiftCode: String {
+        callee.swiftCode + "(" + arguments.map(\.swiftCode).joined(separator: ", ") + ")"
+    }
+}
+
+extension TemplateLiteral {
+    var swiftCode: String {
+        
+        var contents = ""
+        for index in quasis.indices {
+            if index > 0 {
+                contents += "\\(" + expressions[index-1].swiftCode + ")"
+            }
+            
+            contents += quasis[index].swiftCode
+        }
+        
+        if contents.contains("\n") {
+            return "\"\"\"\(contents)\n\"\"\""
+        } else {
+            return "\"\(contents)\""
+        }
+        
+    }
+}
+
+extension TemplateElement {
+    var swiftCode: String { value.swiftCode }
+}
+
+extension TemplateElementValue {
+    var swiftCode: String { cooked }
+}
+
+extension ConditionalExpression {
+    var swiftCode: String {
+        "\(test.swiftCode) ? \(consequent.swiftCode) : \(alternate.swiftCode)"
+    }
+}
+
+extension DoWhileStatement {
+    var swiftCode: String {
+        "repeat \(body.swiftCode) while \(test.swiftCode)"
+    }
+}
+
+extension ThrowStatement {
+    var swiftCode: String {
+        "throw \(argument.swiftCode)"
+    }
+}
+
+extension SwitchStatement {
+    var swiftCode: String {
+        "switch \(discriminant.swiftCode) {\(cases.swiftCode(prefix: "\n", separator: "\n", suffix: "\n"))}"
+    }
+}
+
+extension SwitchCase {
+    var swiftCode: String {
+        "\(test.swiftCode(prefix: "case ", fallback: "default")): \(consequent.swiftCode())"
+    }
+}

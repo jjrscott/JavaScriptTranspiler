@@ -15,6 +15,7 @@
 		0574A89A294F38B70095C04B /* ESTree+SwiftCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A899294F38B70095C04B /* ESTree+SwiftCode.swift */; };
 		0574A89C294F38E80095C04B /* AnyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A89B294F38E80095C04B /* AnyNode.swift */; };
 		0574A89E294F38FB0095C04B /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A89D294F38FB0095C04B /* Node.swift */; };
+		0574A8A1294F7ACC0095C04B /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 0574A8A0294F7ACC0095C04B /* ArgumentParser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0574A8A1294F7ACC0095C04B /* ArgumentParser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +91,9 @@
 			dependencies = (
 			);
 			name = JavaScriptTranspiler;
+			packageProductDependencies = (
+				0574A8A0294F7ACC0095C04B /* ArgumentParser */,
+			);
 			productName = JavaScriptTranspiler;
 			productReference = 0574A84A294B8F9A0095C04B /* JavaScriptTranspiler.app */;
 			productType = "com.apple.product-type.application";
@@ -117,6 +122,9 @@
 				Base,
 			);
 			mainGroup = 0574A841294B8F9A0095C04B;
+			packageReferences = (
+				0574A89F294F7ACC0095C04B /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+			);
 			productRefGroup = 0574A84B294B8F9A0095C04B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -278,7 +286,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 85H2BRRAU7;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -304,7 +312,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 85H2BRRAU7;
-				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -342,6 +350,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0574A89F294F7ACC0095C04B /* XCRemoteSwiftPackageReference "swift-argument-parser" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-argument-parser.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0574A8A0294F7ACC0095C04B /* ArgumentParser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0574A89F294F7ACC0095C04B /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
+			productName = ArgumentParser;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0574A842294B8F9A0095C04B /* Project object */;
 }

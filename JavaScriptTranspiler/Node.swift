@@ -12,16 +12,29 @@ protocol Node: Decodable {
 }
 
 extension Node {
-    var swiftCode: String { "«\(Self.self)»" }
+    var swiftCode: String {
+        print("Unhandled node \(Self.self)")
+        return "«\(Self.self)» /* \(self) */"
+    }
 }
 
 extension Optional where Wrapped: Node {
-    func swiftCode(prefix: String = "", suffix: String = "") -> String {
+    func swiftCode(prefix: String = "", suffix: String = "", fallback: String = "") -> String {
         switch self {
         case .none:
-            return ""
+            return fallback
         case .some(let wrapped):
             return prefix + wrapped.swiftCode + suffix
+        }
+    }
+}
+
+extension Array where Element: Node {
+    func swiftCode(prefix: String = "", separator: String = "", suffix: String = "", fallback: String = "") -> String {
+        if count == 0 {
+            return fallback
+        } else {
+            return prefix + map(\.swiftCode).joined(separator: separator) + suffix
         }
     }
 }
