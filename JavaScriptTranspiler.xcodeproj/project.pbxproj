@@ -11,6 +11,10 @@
 		0574A892294B96110095C04B /* esprima.js in Resources */ = {isa = PBXBuildFile; fileRef = 0574A891294B96110095C04B /* esprima.js */; };
 		0574A895294E1C4B0095C04B /* RawDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A893294E1C4B0095C04B /* RawDecodable.swift */; };
 		0574A896294E1C4B0095C04B /* RawCodingKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A894294E1C4B0095C04B /* RawCodingKey.swift */; };
+		0574A898294F384A0095C04B /* ESTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A897294F384A0095C04B /* ESTree.swift */; };
+		0574A89A294F38B70095C04B /* ESTree+SwiftCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A899294F38B70095C04B /* ESTree+SwiftCode.swift */; };
+		0574A89C294F38E80095C04B /* AnyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A89B294F38E80095C04B /* AnyNode.swift */; };
+		0574A89E294F38FB0095C04B /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A89D294F38FB0095C04B /* Node.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +24,10 @@
 		0574A891294B96110095C04B /* esprima.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = esprima.js; sourceTree = "<group>"; };
 		0574A893294E1C4B0095C04B /* RawDecodable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawDecodable.swift; sourceTree = "<group>"; };
 		0574A894294E1C4B0095C04B /* RawCodingKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RawCodingKey.swift; sourceTree = "<group>"; };
+		0574A897294F384A0095C04B /* ESTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ESTree.swift; sourceTree = "<group>"; };
+		0574A899294F38B70095C04B /* ESTree+SwiftCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTree+SwiftCode.swift"; sourceTree = "<group>"; };
+		0574A89B294F38E80095C04B /* AnyNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyNode.swift; sourceTree = "<group>"; };
+		0574A89D294F38FB0095C04B /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +63,10 @@
 				0574A84D294B8F9A0095C04B /* App.swift */,
 				0574A894294E1C4B0095C04B /* RawCodingKey.swift */,
 				0574A893294E1C4B0095C04B /* RawDecodable.swift */,
+				0574A897294F384A0095C04B /* ESTree.swift */,
+				0574A899294F38B70095C04B /* ESTree+SwiftCode.swift */,
+				0574A89B294F38E80095C04B /* AnyNode.swift */,
+				0574A89D294F38FB0095C04B /* Node.swift */,
 				0574A891294B96110095C04B /* esprima.js */,
 				0574A854294B8F9B0095C04B /* JavaScriptTranspiler.entitlements */,
 			);
@@ -130,9 +142,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0574A89C294F38E80095C04B /* AnyNode.swift in Sources */,
+				0574A89A294F38B70095C04B /* ESTree+SwiftCode.swift in Sources */,
 				0574A896294E1C4B0095C04B /* RawCodingKey.swift in Sources */,
 				0574A895294E1C4B0095C04B /* RawDecodable.swift in Sources */,
 				0574A84E294B8F9A0095C04B /* App.swift in Sources */,
+				0574A898294F384A0095C04B /* ESTree.swift in Sources */,
+				0574A89E294F38FB0095C04B /* Node.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
