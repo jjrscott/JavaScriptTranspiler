@@ -52,10 +52,10 @@ extension Identifier {
 
 extension Literal {
     var swiftCode: String {
-        if raw == "null" {
-            return "nil"
-        } else {
-            return raw
+        switch value {
+        case .string(value: let value): return "\"\(value)\""
+        case .nil: return "nil"
+        default: return raw
         }
     }
 }
