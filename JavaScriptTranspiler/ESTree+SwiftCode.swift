@@ -34,7 +34,7 @@ extension VariableDeclarationKind {
 
 extension VariableDeclarator {
     func swiftCode(stack: NodeStack) throws -> String {
-        try id.swiftCode(stack: stack) + `init`.swiftCode(stack: stack, prefix: stack.swiftType.swiftCode(prefix: " /* \(stack.stack(with: id).path) */") + " = ")
+        try id.swiftCode(stack: stack) + `init`.swiftCode(stack: stack, prefix: stack.stack(with: id).swiftType.swiftCode(prefix: " : ", fallback: " /* \(stack.stack(with: id).path) */") + " = ")
     }
 }
 
@@ -62,10 +62,9 @@ extension ExpressionStatement {
 
 extension BinaryExpression {
     func swiftCode(stack: NodeStack) throws -> String {
-        let op: String
         switch `operator` {
             //        case "instanceof":
-            //        case "in":
+        case "in": return try "JST.contains" + left.swiftCode(stack: stack) + ", " + right.swiftCode(stack: stack) + ")"
             //        case "+":
             //        case "-":
             //        case "*":
@@ -77,18 +76,18 @@ extension BinaryExpression {
             //        case "&":
             //        case "==":
             //        case "!=":
-        case "===": op = "=="
-        case "!==": op = "!="
+        case "===": return try left.swiftCode(stack: stack) + " == " + right.swiftCode(stack: stack)
+        case "!==": return try left.swiftCode(stack: stack) + " != " + right.swiftCode(stack: stack)
             //        case "<":
             //        case ">":
             //        case "<=":
             //        case "<<":
             //        case ">>":
             //        case ">>>":
-        default: op = `operator`
+        default: return try left.swiftCode(stack: stack) + " " + `operator` + " " + right.swiftCode(stack: stack)
         }
 
-        return try left.swiftCode(stack: stack) + " " + op + " " + right.swiftCode(stack: stack)
+        
     }
 }
 

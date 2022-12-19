@@ -12,6 +12,7 @@ import ArgumentParser
 @main
 struct Count: ParsableCommand {
     @Option var output: String
+    @Option var types: String?
     @Argument var input: [String]
 
     mutating func run() throws {
@@ -25,6 +26,14 @@ struct Count: ParsableCommand {
         let sourceCode = try String(contentsOf: sourceCodeUrl)
         context.evaluateScript(sourceCode, withSourceURL: sourceCodeUrl)
         
+        let swiftTypes: [String: Any]
+        if let types = types {
+            swiftTypes = try JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: types))) as! [String: Any]
+        } else {
+            swiftTypes = [:]
+        }
+        
+        
         var swiftCode = ""
         for path in input {
             swiftCode += "\n// MARK: - \(path)\n\n"
@@ -36,24 +45,7 @@ struct Count: ParsableCommand {
             {
                 let data = try JSONSerialization.data(withJSONObject: root, options: .prettyPrinted)
                 do {
-                    let types: [String: Any] = [
-                        "storagewrapper.js" : [
-                            "storage_has": [
-                                "return" : "Bool",
-                                "key" : "String"],
-                            "storage_get": [
-                                "return" : "String?",
-                                "key" : "String"],
-                            "storage_set": [
-                                "key" : "String",
-                                "value" : "String"],
-                            "storage_remove": [
-                                "key" : "String"],
-                    ]
-                    ]
-                    
-                    
-                    let stack = NodeStack(identifiers: [path], types: types)
+                    let stack = NodeStack(identifiers: [path], types: swiftTypes)
                     let program = try JSONDecoder().decode(AnyNode.self, from: data)
                     swiftCode += try program.swiftCode(stack: stack)
                 } catch let error as DecodingError {
@@ -63,7 +55,7 @@ struct Count: ParsableCommand {
                     case .valueNotFound: //(let any, let context):
                         throw error
                     case .keyNotFound(let codingKey, let context):
-                        print("Coding key \(codingKey) not found in \(value(root, for: context.codingPath.dropLast()))")
+                        print("Coding key \(codingKey) not found in \(value(root, for: context.codingPath.dropLast()) ?? "nil")")
                     case .dataCorrupted: //(let context):
                         throw error
                     default:
@@ -80,15 +72,13 @@ struct Count: ParsableCommand {
         var value = value
         for key in codingKeys {
             if let object = value as? [String: Any?] {
-                print("type: \(object["type"])")
-                value = object[key.stringValue]
+//                print("type: \(object["type"])")
+                value = object[key.stringValue] as Any?
             } else if let array = value as? [Any?] {
                 value = array[key.intValue!]
             } else {
                 fatalError()
             }
-            
-            
         }
         return value
     }
