@@ -8,23 +8,21 @@
 import Foundation
 
 extension Program {
-    var swiftCode: String {
-        body
-            .map { $0.swiftCode + "\n" }
-            .joined()
+    func swiftCode(stack: NodeStack) throws -> String {
+        try body.swiftCode(stack: stack, separator: "\n", suffix: "\n")
     }
 }
 
 extension VariableDeclaration {
-    var swiftCode: String {
-        declarations
-            .map { kind.swiftCode + " " + $0.swiftCode }
+    func swiftCode(stack: NodeStack) throws -> String {
+        try declarations
+            .map { try kind.swiftCode(stack: stack) + " " + $0.swiftCode(stack: stack)}
             .joined(separator: "\n")
     }
 }
 
 extension VariableDeclarationKind {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         switch self {
         case .var: return "var"
         case .const:  return "let"
@@ -35,25 +33,21 @@ extension VariableDeclarationKind {
 
 
 extension VariableDeclarator {
-    var swiftCode: String {
-        if let `init` {
-            return id.swiftCode + " = " + `init`.swiftCode
-        } else {
-            return id.swiftCode
-        }
+    func swiftCode(stack: NodeStack) throws -> String {
+        try id.swiftCode(stack: stack) + `init`.swiftCode(stack: stack, prefix: stack.swiftType.swiftCode(prefix: " /* \(stack.stack(with: id).path) */") + " = ")
     }
 }
 
 extension Identifier {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         name
     }
 }
 
 extension Literal {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         switch value {
-        case .string(value: let value): return value.swiftCode
+        case .string(value: let value): return try value.swiftCode(stack: stack)
         case .nil: return "nil"
         default: return raw
         }
@@ -61,13 +55,13 @@ extension Literal {
 }
 
 extension ExpressionStatement {
-    var swiftCode: String {
-        expression.swiftCode
+    func swiftCode(stack: NodeStack) throws -> String {
+        try expression.swiftCode(stack: stack)
     }
 }
 
 extension BinaryExpression {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         let op: String
         switch `operator` {
             //        case "instanceof":
@@ -94,26 +88,29 @@ extension BinaryExpression {
         default: op = `operator`
         }
 
-        return left.swiftCode + " " + op + " " + right.swiftCode
+        return try left.swiftCode(stack: stack) + " " + op + " " + right.swiftCode(stack: stack)
     }
 }
 
 extension BlockStatement {
-    var swiftCode: String { swiftCode(params: []) }
+    func swiftCode(stack: NodeStack) throws -> String {
+        try swiftCode(stack: stack, params: [])
+    }
     
-    func swiftCode(params: [FunctionParameter]) -> String {
-        "{" + params.swiftCode(separator: ", ", suffix: " in") + "\n" + body.map(\.swiftCode).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "\n}"
+    func swiftCode(stack: NodeStack, params: [FunctionParameter]) throws -> String {
+        try "{" + params.swiftCode(stack: stack, separator: ", ", suffix: " in") + "\n" + body.map({ try $0.swiftCode(stack: stack) }).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "\n}"
     }
 }
 
 extension FunctionDeclaration {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         if let id {
-            let paramsSwiftCode = params.map {
-                "_ "+$0.swiftCode + ": \(id.swiftCode.capitalized)\($0.swiftCode.capitalized)"
+            let stack = stack.stack(with: id)
+            let paramsSwiftCode = try params.map {
+                try "_ \($0.swiftCode(stack: stack)): \(stack.stack(with: $0).swiftType.swiftCode(fallback: "/* \(stack.stack(with: $0).path) */ Any"))"
             }.joined(separator: ", ")
 
-            return "func " + id.swiftCode + "("+paramsSwiftCode+") -> \(id.swiftCode.capitalized) " + body.swiftCode
+            return try "func " + id.swiftCode(stack: stack) + "("+paramsSwiftCode+") \(stack.stack(with: "return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
         } else {
             fatalError()
         }
@@ -121,51 +118,47 @@ extension FunctionDeclaration {
 }
 
 extension ReturnStatement {
-    var swiftCode: String {
-        if let argument {
-            return "return "+argument.swiftCode
-        } else {
-            return "return"
-        }
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "return\(argument.swiftCode(stack: stack, prefix: " "))"
     }
 }
 
 extension MemberExpression {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         if computed {
-            return object.swiftCode + "[" + property.swiftCode + "]"
+            return try object.swiftCode(stack: stack) + "[" + property.swiftCode(stack: stack) + "]"
         } else {
-            return object.swiftCode + "." + property.swiftCode
+            return try object.swiftCode(stack: stack) + "." + property.swiftCode(stack: stack)
         }
     }
 }
 
 extension CallExpression {
-    var swiftCode: String {
-        callee.swiftCode + "(" + arguments.map(\.swiftCode).joined(separator: ", ") + ")"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try callee.swiftCode(stack: stack) + "(" + arguments.map({ try $0.swiftCode(stack: stack) }).joined(separator: ", ") + ")"
     }
 }
 
 extension ObjectExpression {
-    var swiftCode: String {
-        "[" + properties.map(\.swiftCode).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "]"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "[" + properties.map({ try $0.swiftCode(stack: stack) }).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "]"
     }
 }
 
 extension AssignmentExpression {
-    var swiftCode: String {
-        left.swiftCode + " " + `operator` + " " + right.swiftCode
+    func swiftCode(stack: NodeStack) throws -> String {
+        try left.swiftCode(stack: stack) + " " + `operator` + " " + right.swiftCode(stack: stack.stack(with: left))
     }
 }
 
 extension Property {
-    var swiftCode: String {
-        key.swiftCode + " : " + value!.swiftCode + ","
+    func swiftCode(stack: NodeStack) throws -> String {
+        try key.swiftCode(stack: stack) + " : " + value!.swiftCode(stack: stack) + ","
     }
 }
 
 extension ForInStatement {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         guard let variableDeclaration = left.node as? VariableDeclaration,
               let variableDeclarator = variableDeclaration.declarations.first,
               let identifier = variableDeclarator.id.node as? Identifier
@@ -175,12 +168,12 @@ extension ForInStatement {
         
         
         
-        return "for \(identifier.swiftCode) in JST.keys(\(right.swiftCode)) {\n\(body.swiftCode)\n}"
+        return try "for \(identifier.swiftCode(stack: stack)) in JST.keys(\(right.swiftCode(stack: stack))) {\n\(body.swiftCode(stack: stack))\n}"
     }
 }
 
 extension ForOfStatement {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         guard let variableDeclaration = left.node as? VariableDeclaration,
               let variableDeclarator = variableDeclaration.declarations.first,
               let identifier = variableDeclarator.id.node as? Identifier
@@ -188,18 +181,18 @@ extension ForOfStatement {
             fatalError()
         }
                 
-        return "for \(identifier.swiftCode) in JST.values(\(right.swiftCode)) {\n\(body.swiftCode)\n}"
+        return try "for \(identifier.swiftCode(stack: stack)) in JST.values(\(right.swiftCode(stack: stack))) {\n\(body.swiftCode(stack: stack))\n}"
     }
 }
 
 extension ForStatement {
-    var swiftCode: String {
-        return "if true {\n\(`init`.swiftCode(suffix: "\n"))while \(test?.swiftCode ?? "true") \(body.swiftCode)\n\(update.swiftCode(suffix: "\n"))}"
+    func swiftCode(stack: NodeStack) throws -> String {
+        return try "if true {\n\(`init`.swiftCode(stack: stack, suffix: "\n"))while \(test?.swiftCode(stack: stack) ?? "true") \(body.swiftCode(stack: stack))\n\(update.swiftCode(stack: stack, suffix: "\n"))}"
     }
 }
 
 extension UpdateExpression {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         let op: String
         switch `operator` {
         case "++": op = "+"
@@ -207,34 +200,34 @@ extension UpdateExpression {
         default: fatalError()
         }
         
-        return "JST.update(\(op), \(`prefix`), 1, &\(argument.swiftCode))"
+        return try "JST.update(\(op), \(`prefix`), 1, &\(argument.swiftCode(stack: stack)))"
     }
 }
 
 extension ArrayExpression {
-    var swiftCode: String {
-        "[\(elements.map(\.swiftCode).joined(separator: ", "))]"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "[\(elements.map({ try $0.swiftCode(stack: stack) }).joined(separator: ", "))]"
     }
 }
 
 extension UnaryExpression {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         if `prefix` {
-            return `operator` + argument.swiftCode
+            return try `operator` + argument.swiftCode(stack: stack)
         } else {
-            return argument.swiftCode + `operator`
+            return try argument.swiftCode(stack: stack) + `operator`
         }
     }
 }
 
 extension LogicalExpression {
-    var swiftCode: String {
-        left.swiftCode + " " + `operator` + " " + right.swiftCode
+    func swiftCode(stack: NodeStack) throws -> String {
+        try left.swiftCode(stack: stack) + " " + `operator` + " " + right.swiftCode(stack: stack)
     }
 }
 
 extension IfStatement {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         
         let block: BlockStatement
         if let consequent = consequent.node as? BlockStatement {
@@ -243,114 +236,120 @@ extension IfStatement {
             block = BlockStatement(body: [AnyNode(node: consequent)])
         }
         
-        return "if \(test.swiftCode) \(block.swiftCode)\(alternate.swiftCode(prefix: " else "))"
+        return try "if \(test.swiftCode(stack: stack)) \(block.swiftCode(stack: stack))\(alternate.swiftCode(stack: stack,prefix: " else "))"
     }
 }
 
 extension FunctionExpression {
-    var swiftCode: String {
-        body.swiftCode(params: params)
+    func swiftCode(stack: NodeStack) throws -> String {
+        try body.swiftCode(stack: stack, params: params)
     }
 }
 
 extension ArrowFunctionExpression {
-    var swiftCode: String { body.swiftCode }
+    func swiftCode(stack: NodeStack) throws -> String {
+        try body.swiftCode(stack: stack)
+    }
 }
 
 extension EmptyStatement {
-    var swiftCode: String { "" }
+    func swiftCode(stack: NodeStack) throws -> String { "" }
 }
 
 extension ThisExpression {
-    var swiftCode: String { "self" }
+    func swiftCode(stack: NodeStack) throws -> String { "self" }
 }
 
 extension WhileStatement {
-    var swiftCode: String {
-        "while \(test.swiftCode) \(body.swiftCode)"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "while \(test.swiftCode(stack: stack)) \(body.swiftCode(stack: stack))"
     }
 }
 
 extension BreakStatement {
-    var swiftCode: String { "break" }
+    func swiftCode(stack: NodeStack) throws -> String { "break" }
 }
 
 extension ContinueStatement {
-    var swiftCode: String { "continue" }
+    func swiftCode(stack: NodeStack) throws -> String { "continue" }
 }
 
 extension TryStatement {
-    var swiftCode: String {
-        "do \(block.swiftCode)\(handler.swiftCode())\(finalizer.swiftCode())"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "do \(block.swiftCode(stack: stack))\(handler.swiftCode(stack: stack))\(finalizer.swiftCode(stack: stack))"
     }
 }
 
 extension CatchClause {
-    var swiftCode: String {
-        " catch let \(param.swiftCode) \(body.swiftCode)"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try " catch let \(param.swiftCode(stack: stack)) \(body.swiftCode(stack: stack))"
     }
 }
 
 extension NewExpression {
-    var swiftCode: String {
-        callee.swiftCode + "(" + arguments.map(\.swiftCode).joined(separator: ", ") + ")"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try callee.swiftCode(stack: stack) + "(" + arguments.map({ try $0.swiftCode(stack: stack) }).joined(separator: ", ") + ")"
     }
 }
 
 extension TemplateLiteral {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         var contents = ""
         for index in quasis.indices {
             if index > 0 {
-                contents += "\\(" + expressions[index-1].swiftCode + ")"
+                contents += try "\\(" + expressions[index-1].swiftCode(stack: stack) + ")"
             }
             
-            contents += quasis[index].swiftCode
+            contents += try quasis[index].swiftCode(stack: stack)
         }
-        return contents.swiftCode
+        return try contents.swiftCode(stack: stack)
     }
 }
 
 extension TemplateElement {
-    var swiftCode: String { value.swiftCode }
+    func swiftCode(stack: NodeStack) throws -> String {
+        try value.swiftCode(stack: stack)
+    }
 }
 
 extension TemplateElementValue {
-    var swiftCode: String { cooked }
+    func swiftCode(stack: NodeStack) throws -> String {
+        cooked
+    }
 }
 
 extension ConditionalExpression {
-    var swiftCode: String {
-        "\(test.swiftCode) ? \(consequent.swiftCode) : \(alternate.swiftCode)"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "\(test.swiftCode(stack: stack)) ? \(consequent.swiftCode(stack: stack)) : \(alternate.swiftCode(stack: stack))"
     }
 }
 
 extension DoWhileStatement {
-    var swiftCode: String {
-        "repeat \(body.swiftCode) while \(test.swiftCode)"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "repeat \(body.swiftCode(stack: stack)) while \(test.swiftCode(stack: stack))"
     }
 }
 
 extension ThrowStatement {
-    var swiftCode: String {
-        "throw \(argument.swiftCode)"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "throw \(argument.swiftCode(stack: stack))"
     }
 }
 
 extension SwitchStatement {
-    var swiftCode: String {
-        "switch \(discriminant.swiftCode) {\(cases.swiftCode(prefix: "\n", separator: "\n", suffix: "\n"))}"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "switch \(discriminant.swiftCode(stack: stack)) {\(cases.swiftCode(stack: stack, prefix: "\n", separator: "\n", suffix: "\n"))}"
     }
 }
 
 extension SwitchCase {
-    var swiftCode: String {
-        "\(test.swiftCode(prefix: "case ", fallback: "default")): \(consequent.swiftCode())"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "\(test.swiftCode(stack: stack, prefix: "case ", fallback: "default")): \(consequent.swiftCode(stack: stack))"
     }
 }
 
 extension ArrayPattern {
-    var swiftCode: String {
-        "[" + elements.swiftCode(separator: ", ") + "]"
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "[" + elements.swiftCode(stack: stack, separator: ", ") + "]"
     }
 }

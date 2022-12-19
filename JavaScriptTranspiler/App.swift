@@ -36,8 +36,26 @@ struct Count: ParsableCommand {
             {
                 let data = try JSONSerialization.data(withJSONObject: root, options: .prettyPrinted)
                 do {
+                    let types: [String: Any] = [
+                        "storagewrapper.js" : [
+                            "storage_has": [
+                                "return" : "Bool",
+                                "key" : "String"],
+                            "storage_get": [
+                                "return" : "String?",
+                                "key" : "String"],
+                            "storage_set": [
+                                "key" : "String",
+                                "value" : "String"],
+                            "storage_remove": [
+                                "key" : "String"],
+                    ]
+                    ]
+                    
+                    
+                    let stack = NodeStack(identifiers: [path], types: types)
                     let program = try JSONDecoder().decode(AnyNode.self, from: data)
-                    swiftCode += program.swiftCode
+                    swiftCode += try program.swiftCode(stack: stack)
                 } catch let error as DecodingError {
                     switch error {
                     case .typeMismatch: //(let any, let context):

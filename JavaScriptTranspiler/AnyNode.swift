@@ -93,5 +93,7 @@ extension AnyNode: Node {
         node = try swiftType.init(from: decoder)
     }
     
-    var swiftCode: String { node.swiftCode }
+    func swiftCode(stack: NodeStack) throws -> String {
+        try node.swiftCode(stack: stack)
+    }
 }

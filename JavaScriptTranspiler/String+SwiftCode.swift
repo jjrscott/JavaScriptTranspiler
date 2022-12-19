@@ -8,7 +8,7 @@
 import Foundation
 
 extension String {
-    var swiftCode: String {
+    func swiftCode(stack: NodeStack) throws -> String {
         var contents = self
         for token in ["\\", "\""] {
             contents = contents.replacingOccurrences(of: token, with: "\\"+token)
@@ -18,6 +18,17 @@ extension String {
             return "\"\"\"\n\(contents)\n\"\"\""
         } else {
             return "\"\(contents)\""
+        }
+    }    
+}
+
+extension Optional where Wrapped == String {
+    func swiftCode(prefix: String = "", suffix: String = "", fallback: String = "") -> String {
+        switch self {
+        case .none:
+            return fallback
+        case .some(let wrapped):
+            return prefix + wrapped + suffix
         }
     }
 }
