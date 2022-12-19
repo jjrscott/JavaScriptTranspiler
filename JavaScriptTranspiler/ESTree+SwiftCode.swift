@@ -53,7 +53,7 @@ extension Identifier {
 extension Literal {
     var swiftCode: String {
         switch value {
-        case .string(value: let value): return "\"\(value.replacingOccurrences(of: "\"", with: "\\\""))\""
+        case .string(value: let value): return value.swiftCode
         case .nil: return "nil"
         default: return raw
         }
@@ -288,7 +288,6 @@ extension NewExpression {
 
 extension TemplateLiteral {
     var swiftCode: String {
-        
         var contents = ""
         for index in quasis.indices {
             if index > 0 {
@@ -297,13 +296,7 @@ extension TemplateLiteral {
             
             contents += quasis[index].swiftCode
         }
-        
-        if contents.contains("\n") {
-            return "\"\"\"\(contents)\n\"\"\""
-        } else {
-            return "\"\(contents)\""
-        }
-        
+        return contents.swiftCode
     }
 }
 

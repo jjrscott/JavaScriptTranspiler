@@ -16,6 +16,7 @@
 		0574A89C294F38E80095C04B /* AnyNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A89B294F38E80095C04B /* AnyNode.swift */; };
 		0574A89E294F38FB0095C04B /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A89D294F38FB0095C04B /* Node.swift */; };
 		0574A8A1294F7ACC0095C04B /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 0574A8A0294F7ACC0095C04B /* ArgumentParser */; };
+		0574A8A5295069D20095C04B /* String+SwiftCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A8A4295069D20095C04B /* String+SwiftCode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		0574A899294F38B70095C04B /* ESTree+SwiftCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ESTree+SwiftCode.swift"; sourceTree = "<group>"; };
 		0574A89B294F38E80095C04B /* AnyNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyNode.swift; sourceTree = "<group>"; };
 		0574A89D294F38FB0095C04B /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		0574A8A4295069D20095C04B /* String+SwiftCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SwiftCode.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				0574A899294F38B70095C04B /* ESTree+SwiftCode.swift */,
 				0574A89B294F38E80095C04B /* AnyNode.swift */,
 				0574A89D294F38FB0095C04B /* Node.swift */,
+				0574A8A4295069D20095C04B /* String+SwiftCode.swift */,
 				0574A891294B96110095C04B /* esprima.js */,
 				0574A854294B8F9B0095C04B /* JavaScriptTranspiler.entitlements */,
 			);
@@ -156,6 +159,7 @@
 				0574A895294E1C4B0095C04B /* RawDecodable.swift in Sources */,
 				0574A84E294B8F9A0095C04B /* App.swift in Sources */,
 				0574A898294F384A0095C04B /* ESTree.swift in Sources */,
+				0574A8A5295069D20095C04B /* String+SwiftCode.swift in Sources */,
 				0574A89E294F38FB0095C04B /* Node.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
