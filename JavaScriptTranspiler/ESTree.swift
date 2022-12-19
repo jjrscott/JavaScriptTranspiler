@@ -83,7 +83,7 @@ struct FunctionExpression: Node {
 struct ArrowFunctionExpression: Node {
     var id: Identifier?
     var params: [FunctionParameter]
-    var body: BlockStatement // BlockStatement | Expression
+    var body: AnyNode // BlockStatement | Expression
     var generator: Bool
     var async: Bool
     var expression = false

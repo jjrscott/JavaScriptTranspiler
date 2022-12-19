@@ -15,7 +15,7 @@ extension String {
         }
         
         if contents.contains("\n") {
-            return "\"\"\"\(contents)\n\"\"\""
+            return "\"\"\"\n\(contents)\n\"\"\""
         } else {
             return "\"\(contents)\""
         }

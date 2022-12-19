@@ -34,12 +34,44 @@ struct Count: ParsableCommand {
                 ,
                let root = result.toObject()
             {
-                let data = try JSONSerialization.data(withJSONObject: root)
-                let program = try JSONDecoder().decode(AnyNode.self, from: data)
+                let data = try JSONSerialization.data(withJSONObject: root, options: .prettyPrinted)
+                do {
+                    let program = try JSONDecoder().decode(AnyNode.self, from: data)
+                    swiftCode += program.swiftCode
+                } catch let error as DecodingError {
+                    switch error {
+                    case .typeMismatch: //(let any, let context):
+                        throw error
+                    case .valueNotFound: //(let any, let context):
+                        throw error
+                    case .keyNotFound(let codingKey, let context):
+                        print("Coding key \(codingKey) not found in \(value(root, for: context.codingPath.dropLast()))")
+                    case .dataCorrupted: //(let context):
+                        throw error
+                    default:
+                        throw error
+                    }
+                }
                 
-                swiftCode += program.swiftCode
             }
         }
         try swiftCode.write(toFile: output, atomically: true, encoding: .utf8)
+    }
+    
+    func value(_ value: Any?, for codingKeys: [CodingKey]) -> Any? {
+        var value = value
+        for key in codingKeys {
+            if let object = value as? [String: Any?] {
+                print("type: \(object["type"])")
+                value = object[key.stringValue]
+            } else if let array = value as? [Any?] {
+                value = array[key.intValue!]
+            } else {
+                fatalError()
+            }
+            
+            
+        }
+        return value
     }
 }

@@ -175,13 +175,26 @@ extension ForInStatement {
         
         
         
-        return "for \(identifier.swiftCode) in JST.elements(\(right.swiftCode)) {\n\(body.swiftCode)\n}"
+        return "for \(identifier.swiftCode) in JST.keys(\(right.swiftCode)) {\n\(body.swiftCode)\n}"
+    }
+}
+
+extension ForOfStatement {
+    var swiftCode: String {
+        guard let variableDeclaration = left.node as? VariableDeclaration,
+              let variableDeclarator = variableDeclaration.declarations.first,
+              let identifier = variableDeclarator.id.node as? Identifier
+        else {
+            fatalError()
+        }
+                
+        return "for \(identifier.swiftCode) in JST.values(\(right.swiftCode)) {\n\(body.swiftCode)\n}"
     }
 }
 
 extension ForStatement {
     var swiftCode: String {
-        return "\(`init`.swiftCode(suffix: "\n"))while \(test?.swiftCode ?? "true") {\n\(body.swiftCode)\n\(update.swiftCode(suffix: "\n"))}"
+        return "if true {\n\(`init`.swiftCode(suffix: "\n"))while \(test?.swiftCode ?? "true") \(body.swiftCode)\n\(update.swiftCode(suffix: "\n"))}"
     }
 }
 
@@ -241,9 +254,7 @@ extension FunctionExpression {
 }
 
 extension ArrowFunctionExpression {
-    var swiftCode: String {
-        body.swiftCode(params: params)
-    }
+    var swiftCode: String { body.swiftCode }
 }
 
 extension EmptyStatement {
@@ -335,5 +346,11 @@ extension SwitchStatement {
 extension SwitchCase {
     var swiftCode: String {
         "\(test.swiftCode(prefix: "case ", fallback: "default")): \(consequent.swiftCode())"
+    }
+}
+
+extension ArrayPattern {
+    var swiftCode: String {
+        "[" + elements.swiftCode(separator: ", ") + "]"
     }
 }
