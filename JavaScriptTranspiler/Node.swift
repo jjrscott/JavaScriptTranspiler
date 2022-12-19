@@ -38,3 +38,15 @@ extension Array where Element: Node {
         }
     }
 }
+
+extension Node {
+    func printType() {
+        print(Self.self)
+    }
+}
+
+extension AnyNode {
+    func printType() {
+        node.printType()
+    }
+}

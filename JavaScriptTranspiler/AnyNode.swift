@@ -7,9 +7,11 @@
 
 import Foundation
 
-struct AnyNode: Node {
+struct AnyNode {
     let node: any Node
-    
+}
+
+extension AnyNode: Node {
     enum CodingKeys: CodingKey {
         case type
     }

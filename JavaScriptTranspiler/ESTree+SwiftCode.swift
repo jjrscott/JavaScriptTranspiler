@@ -222,7 +222,15 @@ extension LogicalExpression {
 
 extension IfStatement {
     var swiftCode: String {
-        "if \(test.swiftCode) \(consequent.swiftCode)\(alternate.swiftCode(prefix: " else "))"
+        
+        let block: BlockStatement
+        if let consequent = consequent.node as? BlockStatement {
+            block = consequent
+        } else {
+            block = BlockStatement(body: [AnyNode(node: consequent)])
+        }
+        
+        return "if \(test.swiftCode) \(block.swiftCode)\(alternate.swiftCode(prefix: " else "))"
     }
 }
 
