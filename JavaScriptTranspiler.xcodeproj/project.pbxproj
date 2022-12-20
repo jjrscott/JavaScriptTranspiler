@@ -31,6 +31,7 @@
 		0574A89B294F38E80095C04B /* AnyNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnyNode.swift; sourceTree = "<group>"; };
 		0574A89D294F38FB0095C04B /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		0574A8A4295069D20095C04B /* String+SwiftCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SwiftCode.swift"; sourceTree = "<group>"; };
+		05F075982951E139007E41FC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +49,7 @@
 		0574A841294B8F9A0095C04B = {
 			isa = PBXGroup;
 			children = (
+				05F075982951E139007E41FC /* README.md */,
 				0574A84C294B8F9A0095C04B /* JavaScriptTranspiler */,
 				0574A84B294B8F9A0095C04B /* Products */,
 			);

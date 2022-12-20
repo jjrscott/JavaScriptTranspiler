@@ -10,7 +10,7 @@ import JavaScriptCore
 import ArgumentParser
 
 @main
-struct Count: ParsableCommand {
+struct JavaScriptTranspiler: ParsableCommand {
     @Option var output: String
     @Option var types: String?
     @Argument var input: [String]
@@ -28,11 +28,12 @@ struct Count: ParsableCommand {
         
         let swiftTypes: [String: Any]
         if let types = types {
-            swiftTypes = try JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: types))) as! [String: Any]
+            swiftTypes = (try? JSONSerialization.jsonObject(with: Data(contentsOf: URL(fileURLWithPath: types))) as? [String: Any]) ?? [:]
         } else {
             swiftTypes = [:]
         }
         
+        let nodeTypes = NodeTypes()
         
         var swiftCode = ""
         for path in input {
@@ -45,7 +46,7 @@ struct Count: ParsableCommand {
             {
                 let data = try JSONSerialization.data(withJSONObject: root, options: .prettyPrinted)
                 do {
-                    let stack = NodeStack(identifiers: [path], types: swiftTypes)
+                    let stack = NodeStack(identifiers: [path], types: swiftTypes, nodeTypes: nodeTypes)
                     let program = try JSONDecoder().decode(AnyNode.self, from: data)
                     swiftCode += try program.swiftCode(stack: stack)
                 } catch let error as DecodingError {
@@ -62,10 +63,13 @@ struct Count: ParsableCommand {
                         throw error
                     }
                 }
-                
             }
         }
         try swiftCode.write(toFile: output, atomically: true, encoding: .utf8)
+        if let types = types {
+            try JSONSerialization.data(withJSONObject: nodeTypes.data, options: [.prettyPrinted, .sortedKeys]).write(to:
+URL(fileURLWithPath: types))
+        }
     }
     
     func value(_ value: Any?, for codingKeys: [CodingKey]) -> Any? {

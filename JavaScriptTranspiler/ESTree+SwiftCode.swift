@@ -86,8 +86,6 @@ extension BinaryExpression {
             //        case ">>>":
         default: return try left.swiftCode(stack: stack) + " " + `operator` + " " + right.swiftCode(stack: stack)
         }
-
-        
     }
 }
 
@@ -109,7 +107,7 @@ extension FunctionDeclaration {
                 try "_ \($0.swiftCode(stack: stack)): \(stack.stack(with: $0).swiftType.swiftCode(fallback: "/* \(stack.stack(with: $0).path) */ Any"))"
             }.joined(separator: ", ")
 
-            return try "func " + id.swiftCode(stack: stack) + "("+paramsSwiftCode+") \(stack.stack(with: "return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
+            return try "func " + id.swiftCode(stack: stack) + stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">") + "("+paramsSwiftCode+") \(stack.stack(with: "@return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
         } else {
             fatalError()
         }
@@ -235,6 +233,7 @@ extension IfStatement {
             block = BlockStatement(body: [AnyNode(node: consequent)])
         }
         
+//        return try "if JSTValue.test(\(test.swiftCode(stack: stack))) \(block.swiftCode(stack: stack))\(alternate.swiftCode(stack: stack,prefix: " else "))"
         return try "if \(test.swiftCode(stack: stack)) \(block.swiftCode(stack: stack))\(alternate.swiftCode(stack: stack,prefix: " else "))"
     }
 }

@@ -1,0 +1,13 @@
+{
+  "BinarySearch.js" : {
+    "binary_search_recursive" : {
+      "@generic" : "T: Comparable",
+      "@return" : "Int?",
+      "a" : "[T]",
+      "hi" : "Int",
+      "lo" : "Int",
+      "mid" : null,
+      "value" : "T"
+    }
+  }
+}
