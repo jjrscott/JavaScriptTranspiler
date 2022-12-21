@@ -17,6 +17,9 @@
 		0574A89E294F38FB0095C04B /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A89D294F38FB0095C04B /* Node.swift */; };
 		0574A8A1294F7ACC0095C04B /* ArgumentParser in Frameworks */ = {isa = PBXBuildFile; productRef = 0574A8A0294F7ACC0095C04B /* ArgumentParser */; };
 		0574A8A5295069D20095C04B /* String+SwiftCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0574A8A4295069D20095C04B /* String+SwiftCode.swift */; };
+		05F0759B2953201F007E41FC /* SwiftFormat in Frameworks */ = {isa = PBXBuildFile; productRef = 05F0759A2953201F007E41FC /* SwiftFormat */; };
+		05F0759D2953201F007E41FC /* SwiftFormatConfiguration in Frameworks */ = {isa = PBXBuildFile; productRef = 05F0759C2953201F007E41FC /* SwiftFormatConfiguration */; };
+		05F075A029532422007E41FC /* Prettify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05F0759E295323EC007E41FC /* Prettify.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +35,7 @@
 		0574A89D294F38FB0095C04B /* Node.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		0574A8A4295069D20095C04B /* String+SwiftCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+SwiftCode.swift"; sourceTree = "<group>"; };
 		05F075982951E139007E41FC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		05F0759E295323EC007E41FC /* Prettify.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Prettify.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +44,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				0574A8A1294F7ACC0095C04B /* ArgumentParser in Frameworks */,
+				05F0759D2953201F007E41FC /* SwiftFormatConfiguration in Frameworks */,
+				05F0759B2953201F007E41FC /* SwiftFormat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,6 +80,7 @@
 				0574A89B294F38E80095C04B /* AnyNode.swift */,
 				0574A89D294F38FB0095C04B /* Node.swift */,
 				0574A8A4295069D20095C04B /* String+SwiftCode.swift */,
+				05F0759E295323EC007E41FC /* Prettify.swift */,
 				0574A891294B96110095C04B /* esprima.js */,
 				0574A854294B8F9B0095C04B /* JavaScriptTranspiler.entitlements */,
 			);
@@ -98,6 +105,8 @@
 			name = JavaScriptTranspiler;
 			packageProductDependencies = (
 				0574A8A0294F7ACC0095C04B /* ArgumentParser */,
+				05F0759A2953201F007E41FC /* SwiftFormat */,
+				05F0759C2953201F007E41FC /* SwiftFormatConfiguration */,
 			);
 			productName = JavaScriptTranspiler;
 			productReference = 0574A84A294B8F9A0095C04B /* JavaScriptTranspiler.app */;
@@ -129,6 +138,7 @@
 			mainGroup = 0574A841294B8F9A0095C04B;
 			packageReferences = (
 				0574A89F294F7ACC0095C04B /* XCRemoteSwiftPackageReference "swift-argument-parser" */,
+				05F075992953201F007E41FC /* XCRemoteSwiftPackageReference "swift-format" */,
 			);
 			productRefGroup = 0574A84B294B8F9A0095C04B /* Products */;
 			projectDirPath = "";
@@ -155,6 +165,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				05F075A029532422007E41FC /* Prettify.swift in Sources */,
 				0574A89C294F38E80095C04B /* AnyNode.swift in Sources */,
 				0574A89A294F38B70095C04B /* ESTree+SwiftCode.swift in Sources */,
 				0574A896294E1C4B0095C04B /* RawCodingKey.swift in Sources */,
@@ -366,6 +377,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		05F075992953201F007E41FC /* XCRemoteSwiftPackageReference "swift-format" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:apple/swift-format.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.50700.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -373,6 +392,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0574A89F294F7ACC0095C04B /* XCRemoteSwiftPackageReference "swift-argument-parser" */;
 			productName = ArgumentParser;
+		};
+		05F0759A2953201F007E41FC /* SwiftFormat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 05F075992953201F007E41FC /* XCRemoteSwiftPackageReference "swift-format" */;
+			productName = SwiftFormat;
+		};
+		05F0759C2953201F007E41FC /* SwiftFormatConfiguration */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 05F075992953201F007E41FC /* XCRemoteSwiftPackageReference "swift-format" */;
+			productName = SwiftFormatConfiguration;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

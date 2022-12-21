@@ -8,6 +8,8 @@
 import Cocoa
 import JavaScriptCore
 import ArgumentParser
+import SwiftFormat
+import SwiftFormatConfiguration
 
 @main
 struct JavaScriptTranspiler: ParsableCommand {
@@ -65,7 +67,9 @@ struct JavaScriptTranspiler: ParsableCommand {
                 }
             }
         }
-        try swiftCode.write(toFile: output, atomically: true, encoding: .utf8)
+        
+        let outputUrl = URL(fileURLWithPath: output)
+        try prettify(text: swiftCode, assumingFileURL: outputUrl).write(to: outputUrl, atomically: true, encoding: .utf8)
         if let types = types {
             try JSONSerialization.data(withJSONObject: nodeTypes.data, options: [.prettyPrinted, .sortedKeys]).write(to:
 URL(fileURLWithPath: types))

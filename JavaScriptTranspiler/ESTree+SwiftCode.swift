@@ -95,7 +95,7 @@ extension BlockStatement {
     }
     
     func swiftCode(stack: NodeStack, params: [FunctionParameter]) throws -> String {
-        try "{" + params.swiftCode(stack: stack, separator: ", ", suffix: " in") + "\n" + body.map({ try $0.swiftCode(stack: stack) }).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "\n}"
+        try "{" + params.swiftCode(stack: stack, separator: ", ", suffix: " in") + body.swiftCode(stack: stack, prefix: "\n", separator: "\n", suffix: "\n") + "}"
     }
 }
 
@@ -138,7 +138,7 @@ extension CallExpression {
 
 extension ObjectExpression {
     func swiftCode(stack: NodeStack) throws -> String {
-        try "[" + properties.map({ try $0.swiftCode(stack: stack) }).joined(separator: "\n").split(separator: "\n").map({"\t" + $0}).joined(separator: "\n") + "]"
+        try "[" + properties.swiftCode(stack: stack, separator: "\n") + "]"
     }
 }
 
