@@ -47,7 +47,7 @@ extension Identifier {
 extension Literal {
     func swiftCode(stack: NodeStack) throws -> String {
         switch value {
-        case .string(value: let value): return try value.swiftCode(stack: stack)
+        case .string(value: let value): return value.swiftQuoteEscape().swiftQuoteWrap()
         case .nil: return "nil"
         default: return raw
         }
@@ -299,13 +299,13 @@ extension TemplateLiteral {
             
             contents += try quasis[index].swiftCode(stack: stack)
         }
-        return try contents.swiftCode(stack: stack)
+        return contents.swiftQuoteWrap()
     }
 }
 
 extension TemplateElement {
     func swiftCode(stack: NodeStack) throws -> String {
-        try value.swiftCode(stack: stack)
+        try value.swiftCode(stack: stack).swiftQuoteEscape()
     }
 }
 

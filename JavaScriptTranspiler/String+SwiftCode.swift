@@ -8,18 +8,26 @@
 import Foundation
 
 extension String {
-    func swiftCode(stack: NodeStack) throws -> String {
+    func swiftQuoteWrap() -> String {
+
+
+        if contains("\n") {
+            return "\"\"\"\n\(self)\n\"\"\""
+        } else {
+            return "\"\(self)\""
+        }
+    }
+    
+    func swiftQuoteEscape() -> String {
         var contents = self
         for token in ["\\", "\""] {
             contents = contents.replacingOccurrences(of: token, with: "\\"+token)
         }
-        
-        if contents.contains("\n") {
-            return "\"\"\"\n\(contents)\n\"\"\""
-        } else {
-            return "\"\(contents)\""
-        }
-    }    
+        return contents
+    }
+    
+    
+    
 }
 
 extension Optional where Wrapped == String {
