@@ -66,10 +66,17 @@ struct Property: Node {
     var key: Expression
     var computed: Bool
     var value: Expression?
-    var kind: String // 'get' | 'set' | 'init'
+    var kind: PropertyKind // 'get' | 'set' | 'init'
     var method = false
     var shorthand: Bool
 }
+
+enum PropertyKind: String, Decodable {
+    case get
+    case set
+    case `init`
+}
+
 
 struct FunctionExpression: Node {
     var id: Identifier?
@@ -164,9 +171,14 @@ struct SpreadElement: Node {
 }
 
 struct UpdateExpression: Node {
-    var `operator`: String // '++' | '--'
+    var `operator`: UpdateExpressionOperator // '++' | '--'
     var argument: Expression
     var prefix: Bool
+}
+
+enum UpdateExpressionOperator: String, Decodable {
+    case increment = "++"
+    case decrement = "--"
 }
 
 struct AwaitExpression: Node {
@@ -321,8 +333,6 @@ struct VariableDeclaration: Node {
 }
 
 enum VariableDeclarationKind: String, Decodable {
-    typealias RawValue = String
-    
     case `var`
     case `const`
     case `let`
@@ -349,7 +359,6 @@ struct Program: Node {
 }
 
 enum ProgramSourceType: String, Decodable {
-    typealias RawValue = String
     case script
     case module
 }

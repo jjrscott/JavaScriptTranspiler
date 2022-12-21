@@ -192,9 +192,8 @@ extension UpdateExpression {
     func swiftCode(stack: NodeStack) throws -> String {
         let op: String
         switch `operator` {
-        case "++": op = "+"
-        case "--": op = "-"
-        default: fatalError()
+        case .increment: op = "+"
+        case .decrement: op = "-"
         }
         
         return try "JST.update(\(op), \(`prefix`), 1, &\(argument.swiftCode(stack: stack)))"
