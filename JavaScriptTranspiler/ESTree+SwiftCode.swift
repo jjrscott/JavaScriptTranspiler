@@ -233,7 +233,6 @@ extension IfStatement {
             block = BlockStatement(body: [AnyNode(node: consequent)])
         }
         
-//        return try "if JSTValue.test(\(test.swiftCode(stack: stack))) \(block.swiftCode(stack: stack))\(alternate.swiftCode(stack: stack,prefix: " else "))"
         return try "if \(test.swiftCode(stack: stack)) \(block.swiftCode(stack: stack))\(alternate.swiftCode(stack: stack,prefix: " else "))"
     }
 }
@@ -349,5 +348,51 @@ extension SwitchCase {
 extension ArrayPattern {
     func swiftCode(stack: NodeStack) throws -> String {
         try "[" + elements.swiftCode(stack: stack, separator: ", ") + "]"
+    }
+}
+
+extension ClassDeclaration {
+    func swiftCode(stack: NodeStack) throws -> String {
+        if let id {
+            let stack = stack.stack(with: id)
+            return try "class \(id.swiftCode(stack: stack))\(superClass.swiftCode(stack: stack, prefix: " : ")) \(body.swiftCode(stack: stack))"
+        } else {
+            fatalError()
+        }
+    }
+}
+
+extension ClassBody {
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "{" + body.swiftCode(stack: stack, prefix: "\n", separator: "\n", suffix: "\n") + "}"
+    }
+}
+
+extension MethodDefinition {
+    func swiftCode(stack: NodeStack) throws -> String {
+        guard let value else {
+            fatalError()
+        }
+                
+        switch kind {
+        case .method:
+            let stack = stack.stack(with: key!)
+            let paramsSwiftCode = try value.params.map {
+                try "_ \($0.swiftCode(stack: stack)): \(stack.stack(with: $0).swiftType.swiftCode(fallback: "/* \(stack.stack(with: $0).path) */ Any"))"
+            }.joined(separator: ", ")
+            return try "\(stack.stack(with: "@prefix").swiftType.swiftCode(suffix: " "))\(`static` ? "static " : "")func \(key.swiftCode(stack: stack))\(stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">"))(\(paramsSwiftCode)) \(stack.stack(with: "@return").swiftType.swiftCode(prefix: "-> ")) \(value.body.swiftCode(stack: stack))"
+        case .constructor:
+            let stack = stack.stack(with: "init")
+            let paramsSwiftCode = try value.params.map {
+                try "_ \($0.swiftCode(stack: stack)): \(stack.stack(with: $0).swiftType.swiftCode(fallback: "/* \(stack.stack(with: $0).path) */ Any"))"
+            }.joined(separator: ", ")
+            return try "\(stack.stack(with: "@prefix").swiftType.swiftCode(suffix: " "))init\(stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">"))(\(paramsSwiftCode)) \(value.body.swiftCode(stack: stack))"
+        }
+    }
+}
+
+extension Super {
+    func swiftCode(stack: NodeStack) throws -> String {
+        "super"
     }
 }

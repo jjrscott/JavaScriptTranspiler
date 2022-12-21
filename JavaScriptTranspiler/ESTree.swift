@@ -103,8 +103,14 @@ struct MethodDefinition: Node {
     var key: Expression?
     var computed: Bool
     var value: FunctionExpression?
-    var kind: String // 'method' | 'constructor'
+    var kind: MethodDefinitionKind // 'method' | 'constructor'
     var `static`: Bool
+}
+
+enum MethodDefinitionKind: String, Decodable {
+    typealias RawValue = String
+    case method
+    case constructor
 }
 
 struct TaggedTemplateExpression: Node {
@@ -337,19 +343,15 @@ struct WithStatement: Node {
     var body: Statement
 }
 
-//struct Program: Node {
-//  var sourceType: 'script'
-//  var body: [StatementListItem]
-//}
-//
-//struct Program: Node {
-//  var sourceType: 'module'
-//  var body: [ModuleItem]
-//}
-
 struct Program: Node {
-    var sourceType: String
+    var sourceType: ProgramSourceType
     var body: [AnyNode]
+}
+
+enum ProgramSourceType: String, Decodable {
+    typealias RawValue = String
+    case script
+    case module
 }
 
 struct ImportSpecifier: Node {
