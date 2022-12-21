@@ -64,7 +64,7 @@ extension BinaryExpression {
     func swiftCode(stack: NodeStack) throws -> String {
         switch `operator` {
             //        case "instanceof":
-        case "in": return try "JST.contains" + left.swiftCode(stack: stack) + ", " + right.swiftCode(stack: stack) + ")"
+        case "in": return try "JST.contains(" + left.swiftCode(stack: stack) + ", " + right.swiftCode(stack: stack) + ")"
             //        case "+":
             //        case "-":
             //        case "*":

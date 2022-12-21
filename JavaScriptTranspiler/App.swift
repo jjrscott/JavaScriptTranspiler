@@ -16,6 +16,7 @@ struct JavaScriptTranspiler: ParsableCommand {
     @Option var output: String
     @Option var types: String?
     @Argument var input: [String]
+    @Flag(inversion: .prefixedNo) var format = true
 
     mutating func run() throws {
         guard let context = JSContext() else { fatalError() }
@@ -69,7 +70,12 @@ struct JavaScriptTranspiler: ParsableCommand {
         }
         
         let outputUrl = URL(fileURLWithPath: output)
-        try prettify(text: swiftCode, assumingFileURL: outputUrl).write(to: outputUrl, atomically: true, encoding: .utf8)
+        
+        if format {
+            swiftCode = prettify(text: swiftCode, assumingFileURL: outputUrl)
+        }
+        
+        try swiftCode.write(to: outputUrl, atomically: true, encoding: .utf8)
         if let types = types {
             try JSONSerialization.data(withJSONObject: nodeTypes.data, options: [.prettyPrinted, .sortedKeys]).write(to:
 URL(fileURLWithPath: types))

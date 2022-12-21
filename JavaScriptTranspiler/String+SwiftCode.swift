@@ -9,8 +9,6 @@ import Foundation
 
 extension String {
     func swiftQuoteWrap() -> String {
-
-
         if contains("\n") {
             return "\"\"\"\n\(self)\n\"\"\""
         } else {
@@ -25,9 +23,6 @@ extension String {
         }
         return contents
     }
-    
-    
-    
 }
 
 extension Optional where Wrapped == String {
