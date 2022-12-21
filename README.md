@@ -92,9 +92,6 @@ OPTIONS:
 The following [ESTree](https://github.com/estree) node types are currently unsupported:
 
 - AssignmentPattern
-- AwaitExpression
-- ClassBody
-- ClassDeclaration
 - ClassExpression
 - DebuggerStatement
 - ExportAllDeclaration
@@ -106,12 +103,10 @@ The following [ESTree](https://github.com/estree) node types are currently unsup
 - LabeledStatement
 - Literal (regex)
 - MetaProperty
-- MethodDefinition
 - ObjectPattern
 - RestElement
 - SequenceExpression
 - SpreadElement
-- Super
 - TaggedTemplateExpression
 - WithStatement
 - YieldExpression

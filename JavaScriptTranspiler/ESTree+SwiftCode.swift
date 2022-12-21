@@ -107,7 +107,7 @@ extension FunctionDeclaration {
                 try "_ \($0.swiftCode(stack: stack)): \(stack.stack(with: $0).swiftType.swiftCode(fallback: "/* \(stack.stack(with: $0).path) */ Any"))"
             }.joined(separator: ", ")
 
-            return try "func " + id.swiftCode(stack: stack) + stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">") + "("+paramsSwiftCode+") \(stack.stack(with: "@return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
+            return try "func " + id.swiftCode(stack: stack) + stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">") + "("+paramsSwiftCode+")\(`async` ? " async" : "") \(stack.stack(with: "@return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
         } else {
             fatalError()
         }
@@ -394,5 +394,11 @@ extension MethodDefinition {
 extension Super {
     func swiftCode(stack: NodeStack) throws -> String {
         "super"
+    }
+}
+
+extension AwaitExpression {
+    func swiftCode(stack: NodeStack) throws -> String {
+        try "await " + argument.swiftCode(stack: stack)
     }
 }
