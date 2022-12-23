@@ -87,7 +87,7 @@ struct JavaScriptTranspiler: ParsableCommand {
                     print("Formatting failed with error \(error). Skipping")
                 case .fileContainsInvalidSyntax(let position):
                     let location = SourceLocationConverter(file: outputUrl.path, source: swiftCode).location(for: position)
-                    print("file contains invalid or unrecognized Swift syntax at \(location)")
+                    print("Formatting failed at \(outputUrl.path(percentEncoded: false)):\(location). Skipping")
                 }
             }
         }
