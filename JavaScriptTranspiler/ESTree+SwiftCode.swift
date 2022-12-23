@@ -9,7 +9,7 @@ import Foundation
 
 extension Program {
     func swiftCode(stack: NodeStack) throws -> String {
-        try body.swiftCode(stack: stack, separator: "\n", suffix: "\n")
+        try body.filter({ $0.node is FunctionDeclaration }).swiftCode(stack: stack, separator: "\n", suffix: "\n")
     }
 }
 
@@ -103,8 +103,8 @@ extension BlockStatement {
         try swiftCode(stack: stack, params: [])
     }
     
-    func swiftCode(stack: NodeStack, params: [FunctionParameter]) throws -> String {
-        try "{" + params.swiftCode(stack: stack, separator: ", ", suffix: " in") + body.swiftCode(stack: stack, prefix: "\n", separator: "\n", suffix: "\n") + "}"
+    func swiftCode(stack: NodeStack, params: [FunctionParameter], finalizer: BlockStatement? = nil) throws -> String {
+        try "{" + params.swiftCode(stack: stack, separator: ", ", suffix: " in") + finalizer.swiftCode(stack: stack, prefix: "\ndefer ") + body.swiftCode(stack: stack, prefix: "\n", separator: "\n", suffix: "\n") + "}"
     }
 }
 
@@ -124,8 +124,14 @@ extension FunctionDeclaration {
                 
                 
             }.joined(separator: ", ")
-
-            return try "func " + id.swiftCode(stack: stack) + stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">") + "("+paramsSwiftCode+")\(`async` ? " async" : "") \(stack.stack(with: "@return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
+            
+            let result = try "func " + id.swiftCode(stack: stack) + stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">") + "("+paramsSwiftCode+")\(`async` ? " async" : "") \(stack.stack(with: "@return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
+            
+            if stack.stack(with: "@keep").swiftType.swiftCode() == "true" {
+                return result
+            } else {
+                return ""
+            }
         } else {
             fatalError()
         }
@@ -183,7 +189,7 @@ extension ForInStatement {
         
         
         
-        return try "for \(identifier.swiftCode(stack: stack)) in JST.keys(\(right.swiftCode(stack: stack))) {\n\(body.swiftCode(stack: stack))\n}"
+        return try "for \(identifier.swiftCode(stack: stack)) in JST.keys(\(right.swiftCode(stack: stack))) \(body.swiftCode(stack: stack))"
     }
 }
 
@@ -196,7 +202,7 @@ extension ForOfStatement {
             fatalError()
         }
                 
-        return try "for \(identifier.swiftCode(stack: stack)) in JST.values(\(right.swiftCode(stack: stack))) {\n\(body.swiftCode(stack: stack))\n}"
+        return try "for \(identifier.swiftCode(stack: stack)) in JST.values(\(right.swiftCode(stack: stack))) \(body.swiftCode(stack: stack))"
     }
 }
 
@@ -302,7 +308,7 @@ extension ContinueStatement {
 
 extension TryStatement {
     func swiftCode(stack: NodeStack) throws -> String {
-        try "do \(block.swiftCode(stack: stack))\(handler.swiftCode(stack: stack))\(finalizer.swiftCode(stack: stack))"
+        return try "do \(block.swiftCode(stack: stack, params: [], finalizer: finalizer))\(handler.swiftCode(stack: stack))"
     }
 }
 
