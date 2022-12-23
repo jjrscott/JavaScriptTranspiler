@@ -376,7 +376,7 @@ extension SwitchStatement {
 
 extension SwitchCase {
     func swiftCode(stack: NodeStack) throws -> String {
-        try "\(test.swiftCode(stack: stack, prefix: "case ", fallback: "default")): \(consequent.swiftCode(stack: stack))"
+        try "\(test.swiftCode(stack: stack, prefix: "case ", fallback: "default")): \(consequent.swiftCode(stack: stack, separator: "\n"))"
     }
 }
 
