@@ -21,6 +21,7 @@ extension String {
         for token in ["\\", "\""] {
             contents = contents.replacingOccurrences(of: token, with: "\\"+token)
         }
+        contents = contents.replacingOccurrences(of: "\t", with: "\\t")
         return contents
     }
 }

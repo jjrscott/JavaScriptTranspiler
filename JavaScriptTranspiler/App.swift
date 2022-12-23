@@ -10,10 +10,12 @@ import JavaScriptCore
 import ArgumentParser
 import SwiftFormat
 import SwiftFormatConfiguration
+import SwiftSyntax
 
 @main
 struct JavaScriptTranspiler: ParsableCommand {
     @Option var output: String
+    @Option var ast: String?
     @Option var types: String?
     @Argument var input: [String]
     @Flag(inversion: .prefixedNo) var format = true
@@ -38,6 +40,8 @@ struct JavaScriptTranspiler: ParsableCommand {
         
         let nodeTypes = NodeTypes()
         
+        var jsonAST = [String:Any]()
+        
         var swiftCode = ""
         for path in input {
             swiftCode += "\n// MARK: - \(path)\n\n"
@@ -47,6 +51,7 @@ struct JavaScriptTranspiler: ParsableCommand {
                 ,
                let root = result.toObject()
             {
+                jsonAST[path] = root
                 let data = try JSONSerialization.data(withJSONObject: root, options: .prettyPrinted)
                 do {
                     let stack = NodeStack(identifiers: [path], types: swiftTypes, nodeTypes: nodeTypes)
@@ -72,7 +77,24 @@ struct JavaScriptTranspiler: ParsableCommand {
         let outputUrl = URL(fileURLWithPath: output)
         
         if format {
-            swiftCode = prettify(text: swiftCode, assumingFileURL: outputUrl)
+            do {
+                swiftCode = try prettify(text: swiftCode, assumingFileURL: outputUrl)
+            } catch let error as SwiftFormatError {
+                switch error {
+                case .fileNotReadable:
+                    print("Formatting failed with error \(error). Skipping")
+                case .isDirectory:
+                    print("Formatting failed with error \(error). Skipping")
+                case .fileContainsInvalidSyntax(let position):
+                    let location = SourceLocationConverter(file: outputUrl.path, source: swiftCode).location(for: position)
+                    print("file contains invalid or unrecognized Swift syntax at \(location)")
+                }
+            }
+        }
+        
+        if let ast {
+            try JSONSerialization.data(withJSONObject: jsonAST, options: [.prettyPrinted, .sortedKeys]).write(to:
+URL(fileURLWithPath: ast))
         }
         
         try swiftCode.write(to: outputUrl, atomically: true, encoding: .utf8)
