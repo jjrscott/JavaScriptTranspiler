@@ -6,7 +6,7 @@
       "a" : "[T]",
       "hi" : "Int",
       "lo" : "Int",
-      "mid" : null,
+      "mid" : "Int",
       "value" : "T"
     }
   }

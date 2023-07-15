@@ -127,11 +127,7 @@ extension FunctionDeclaration {
             
             let result = try "func " + id.swiftCode(stack: stack) + stack.stack(with: "@generic").swiftType.swiftCode(prefix: "<", suffix: ">") + "("+paramsSwiftCode+")\(`async` ? " async" : "") \(stack.stack(with: "@return").swiftType.swiftCode(prefix: "-> ")) " + body.swiftCode(stack: stack)
             
-            if stack.stack(with: "@keep").swiftType.swiftCode() == "true" {
-                return result
-            } else {
-                return ""
-            }
+            return result
         } else {
             fatalError()
         }

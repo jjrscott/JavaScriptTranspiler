@@ -19,7 +19,8 @@ let package = Package(
             name: "JavaScriptTranspiler",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-            ]),
+            ],
+            resources: [.copy("esprima.js")]),
         .plugin(
             name: "BuildTool",
             capability: .buildTool(),

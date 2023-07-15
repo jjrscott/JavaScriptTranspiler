@@ -26,9 +26,11 @@ struct JavaScriptTranspiler: ParsableCommand {
             Darwin.exit(1)
         }
         
-        context.evaluateScript(esprimaSourceCode)
-                
-        print("error: \(input)")
+        guard let esprimaPath = Bundle.module.url(forResource: "esprima", withExtension: "js") else {
+            throw GenericError()
+        }
+        
+        context.evaluateScript(try String(contentsOf: esprimaPath))
         
         let swiftTypes: [String: Any]
         if let types = types {
@@ -75,7 +77,7 @@ struct JavaScriptTranspiler: ParsableCommand {
         
         let data = try JSONSerialization.data(withJSONObject: root, options: .prettyPrinted)
         do {
-            let stack = NodeStack(identifiers: [], types: swiftTypes, nodeTypes: nodeTypes)
+            let stack = NodeStack(identifiers: [inputUrl.lastPathComponent], types: swiftTypes, nodeTypes: nodeTypes)
             let program = try JSONDecoder().decode(AnyNode.self, from: data)
             swiftCode += try program.swiftCode(stack: stack)
         } catch let error as DecodingError {
@@ -103,7 +105,6 @@ struct JavaScriptTranspiler: ParsableCommand {
         var value = value
         for key in codingKeys {
             if let object = value as? [String: Any?] {
-//                print("type: \(object["type"])")
                 value = object[key.stringValue] as Any?
             } else if let array = value as? [Any?] {
                 value = array[key.intValue!]

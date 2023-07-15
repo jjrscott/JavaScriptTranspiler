@@ -121,6 +121,8 @@ struct NodeStack {
                 return swiftType(identifiers: Array(identifiers.dropFirst(1)), types: value)
             } else if value is NSNull {
                 return nil
+            } else if let value = value as? Bool {
+                return "\(value)"
             } else {
                 fatalError()
             }
